@@ -1,30 +1,36 @@
-import React from 'react'
-import CartSummary from './CartSummary'
-import { Button, Container,Menu } from 'semantic-ui-react'
+import React,{useState} from "react";
+import CartSummary from "./CartSummary";
+import { Container, Menu } from "semantic-ui-react";
+import SignedOut from "./SignedOut";
+import SignedIn from "./SignedIn";
+import { useHistory } from "react-router";
 
 export default function Navi() {
-    return (
-        <div>
-            <Menu inverted fixed="top"> 
-                <Container>
+  const [isAuthenticated, setIsAuthenticated] = useState(true)
 
-                    <Menu.Item
-                        name='home'
-                    />
-                    <Menu.Item
-                        name='messages'
-                    />
+const history=useHistory()
+  function handleSignOut() {
+    setIsAuthenticated(false)
+    history.push("/")
+    
+  }
+  function handleSignIn() {
+    setIsAuthenticated(true)
+  }
+  return (
+    <div>
+      <Menu inverted fixed="top">
+        <Container>
+          <Menu.Item name="home" />
+          <Menu.Item name="messages" />
 
-                    <Menu.Menu position='right'>
-                       <CartSummary/>
-
-                        <Menu.Item>
-                            <Button primary>Sign Up</Button>
-                        </Menu.Item>
-                    </Menu.Menu>
-                </Container>
-
-            </Menu>
-        </div>
-    )
+          <Menu.Menu position="right">
+            <CartSummary/>
+            {isAuthenticated?<SignedIn signOut={handleSignOut}/>:<SignedOut signIn={handleSignIn}/>}
+            //: if demek,yerine if de yazabiliriz
+          </Menu.Menu>
+        </Container>
+      </Menu>
+    </div>
+  );
 }
